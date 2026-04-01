@@ -1,36 +1,42 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 
 public class Main {
     public static void main(String[] args) throws IOException {
         // The Slithering Code Challenge [Evaluation]
+
         ArrayList<String[]> grid = new ArrayList<>();
 
-        File mapp = new File("src/map.txt");
-        Path path = mapp.toPath();
-        // try-with-resources: Scanner will be closed automatically
-        try (Scanner mapScanner = new Scanner(mapp)) {
+        File readMap = new File("src/map.txt");
+
+        try (Scanner mapScanner = new Scanner(readMap)) {
             while (mapScanner.hasNextLine()) {
                 String data = mapScanner.nextLine();
-                //System.out.println(data);
                 String[] row = data.split(" ");
                 grid.add(row);
-
             }
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        //String[][] grid = new String[0][];
-        for (String[] row : grid) {
-            for (String cell : row) {
-                System.out.print(cell + " ");
+
+        int rows = grid.size();
+        int cols = grid.get(0).length;
+
+        String[][] mapArray = new String[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                mapArray[i][j] = grid.get(i)[j];
+            }
+        }
+
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                System.out.print(mapArray[i][j] + " ");
             }
             System.out.println();
         }
@@ -39,5 +45,6 @@ public class Main {
 
 
 
-        }
+
     }
+}
