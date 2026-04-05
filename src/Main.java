@@ -9,7 +9,7 @@ public class Main {
         System.out.println("---------Game Started---------");
         System.out.println("------------------------------");
 
-        // ── Load map ──────────────────────────────────────────
+
         ArrayList<String[]> grid = new ArrayList<>();
         File readMap = new File("src/map.txt");
 
@@ -31,7 +31,7 @@ public class Main {
             for (int j = 0; j < cols; j++)
                 mapArray[i][j] = grid.get(i)[j];
 
-        // ── Build snake (rightmost 'o' = head, leftmost 'o' = tail) ──
+
         LinkedList<int[]> snake = new LinkedList<>();
         for (int row = 0; row < mapArray.length; row++)
             for (int col = 0; col < mapArray[0].length; col++)
@@ -41,36 +41,35 @@ public class Main {
         System.out.println("Snake Head : " + Arrays.toString(snake.getFirst()));
         System.out.println("Snake Tail : " + Arrays.toString(snake.getLast()));
 
-        // ── Print initial map ──────────────────────────────────
+
         printMap(mapArray, rows, cols);
 
-        // ── Game Loop ──────────────────────────────────────────
+
         Scanner input = new Scanner(System.in);
         boolean isMove = true;
 
         while (isMove) {
-            System.out.println("Enter direction (U/D/L/R) or Q to quit: ");
+            System.out.println("Enter (W-A-S-D) to move  or Q to quit: ");
             String dir = input.nextLine();
 
-            // Get current head position
             int[] head = snake.getFirst();
             int newRow = head[0];
             int newCol = head[1];
 
             switch (dir.toLowerCase()) {
-                case "u":
+                case "w":
                     System.out.println("Snake moves Up");
                     newRow--;
                     break;
-                case "d":
+                case "s":
                     System.out.println("Snake moves Down");
                     newRow++;
                     break;
-                case "r":
+                case "d":
                     System.out.println("Snake moves Right");
                     newCol++;
                     break;
-                case "l":
+                case "a":
                     System.out.println("Snake moves Left");
                     newCol--;
                     break;
@@ -83,27 +82,26 @@ public class Main {
                     continue;
             }
 
-            // ── Check boundaries ───────────────────────────────
+
             if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols) {
                 System.out.println("Cannot move there! Hit the wall.");
                 continue;
             }
 
-            // ── Move snake ─────────────────────────────────────
-            // 1. Clear old tail from map
+
             int[] tail = snake.getLast();
             mapArray[tail[0]][tail[1]] = ".";
 
-            // 2. Remove tail from snake list
+
             snake.removeLast();
 
-            // 3. Add new head to snake list
+
             snake.addFirst(new int[]{newRow, newCol});
 
-            // 4. Update new head on map
+
             mapArray[newRow][newCol] = "o";
 
-            // ── Print updated info ─────────────────────────────
+
             System.out.println("Snake Head : " + Arrays.toString(snake.getFirst()));
             System.out.println("Snake Tail : " + Arrays.toString(snake.getLast()));
             printMap(mapArray, rows, cols);
@@ -112,7 +110,7 @@ public class Main {
         input.close();
     }
 
-    // ── Print Map Method ───────────────────────────────────────
+
     static void printMap(String[][] mapArray, int rows, int cols) {
         System.out.println("\n--- Current Map ---");
         for (int i = 0; i < rows; i++) {
