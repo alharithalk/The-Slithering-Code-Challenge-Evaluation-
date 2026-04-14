@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class copy01 {
@@ -15,7 +16,7 @@ public class copy01 {
         try (Scanner mapScanner = new Scanner(file)) {
             while (mapScanner.hasNextLine()) {
                 String data = mapScanner.nextLine();
-                String[] row = data.split(" ");
+                String[] row = data.split("");
                 mapGrid.add(row);
             }
         } catch (FileNotFoundException e) {
@@ -55,19 +56,19 @@ public class copy01 {
         }
 
 
+
         System.out.println("Tail: [" + snake.getFirst()[0] + "," + snake.getFirst()[1] + "]");
         System.out.println("Head: [" + snake.getLast()[0] + "," + snake.getLast()[1] + "]");
 
-
-
-        StringBuilder snakeLine = new StringBuilder("SNAKE");
-        for (int[] segment : snake) {
-            snakeLine.append(" ").append(segment[0]).append(" ").append(segment[1]);
+        if (args.length < 2)
+        {
+            System.out.println("Usage: java copy01 <direction> <steps>");
+            return;
         }
-
-            // movmet
         String dir = args[0].toLowerCase();
         int steps =Integer.parseInt(args[1]);
+        boolean isHitWall = false;
+
 
         for(int step =0; step< steps;step++) {
             int[] head = snake.getLast();
@@ -84,29 +85,50 @@ public class copy01 {
 
             if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols) {
                 System.out.println("you hit the wall hehehe " + dir);
+                isHitWall = true;
                 break;
             }
-            int[] oldTail=snake.getFirst();
-            snake.addLast(new int[]{newRow,newCol});
-            snake.removeFirst();
-            map[oldTail[0]][oldTail[1]]="-";
-            map[newRow][newCol] = "o";
+
+                int[] oldTail=snake.getFirst();
+                snake.addLast(new int[]{newRow,newCol});
+                snake.removeFirst();
+                map[oldTail[0]][oldTail[1]]="-";
+                map[newRow][newCol] = "o";
+
         }
-        System.out.println("\t=== new map here  === ");
-        for (int i=0;i<map.length;i++)
-        {
-            for(int j =0; j<map[i].length;j++)
-            {
-                System.out.print(map[i][j]+" ");
+
+        if(!isHitWall) {
+            System.out.println("\t=== new map here  === ");
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[i].length; j++) {
+                    System.out.print(map[i][j] + " ");
+                }
+                System.out.println(" ");
             }
-            System.out.println(" ");
         }
-        System.out.println(snakeLine);
+        System.out.println("Uptdated Tail: [" + snake.getFirst()[0] + "," + snake.getFirst()[1] + "]");
+        System.out.println("Uptdated Head: [" + snake.getLast()[0] + "," + snake.getLast()[1] + "]");
 
 
+        StringBuilder snakeLine = new StringBuilder("SNAKE");
+        for (int[] segment : snake) {
+            snakeLine.append(" ").append(segment[0]).append(" ").append(segment[1]);
+        }
 
+        try (PrintWriter writer = new PrintWriter(file)) {
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[i].length; j++) {
+                    if (j > 0) writer.print(" ");
+                    writer.print(map[i][j]);
+                }
+                writer.println();
+            }
+            writer.println(snakeLine);
+        } catch (IOException e) {
+            System.out.println("Error saving file: " + e.getMessage());
+        }
 
-
+        System.out.println("Map saved!");
 
     }
 }
