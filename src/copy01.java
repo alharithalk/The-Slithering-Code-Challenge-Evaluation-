@@ -15,12 +15,25 @@ public class copy01 {
 
         try (Scanner mapScanner = new Scanner(file)) {
             while (mapScanner.hasNextLine()) {
-                String data = mapScanner.nextLine();
-                String[] row = data.split("");
-                mapGrid.add(row);
+                String data = mapScanner.nextLine().trim();
+
+                if (data.isEmpty()) continue;
+
+                if (data.startsWith("SNAKE")) {
+                    String[] parts = data.split(" ");
+                    for (int i = 1; i < parts.length; i += 2) {
+                        int r = Integer.parseInt(parts[i]);
+                        int c = Integer.parseInt(parts[i + 1]);
+                        snake.addLast(new int[]{r, c});
+                    }
+                } else {
+                    String[] row = data.split(" ");
+                    mapGrid.add(row);
+                }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Error reading file: " + e.getMessage());
+            return;
         }
 
 
@@ -84,7 +97,9 @@ public class copy01 {
             if (dir.equals("right")) newCol = headCol + 1;
 
             if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols) {
-                System.out.println("you hit the wall hehehe " + dir);
+                System.out.println("=================================\n" +
+                        "==== hehehehehehe you hit the wall hehehe =============" +"at the "+ dir+
+                        "\n================================" );
                 isHitWall = true;
                 break;
             }
@@ -123,12 +138,12 @@ public class copy01 {
                 }
                 writer.println();
             }
-            writer.println(snakeLine);
+            //writer.println(snakeLine);
         } catch (IOException e) {
             System.out.println("Error saving file: " + e.getMessage());
         }
 
-        System.out.println("Map saved!");
+
 
     }
 }
